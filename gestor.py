@@ -173,16 +173,17 @@ class Vista(Frame):
         toplevel.geometry("%dx%d+%d+%d" % (size + (x, y)))
 
 
+def main():
+    root = Tk()
+    root.title("Contraseña")
+    root.geometry("250x150")
 
-root = Tk()
-root.title("Contraseña")
-root.geometry("250x150")
+    root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(root.winfo_id()))
+    app = Vista(root)
+    app.grid(column=0, row=0)
+    app.columnconfigure(0, weight=1)
+    app.rowconfigure(0, weight=1)
+    root.mainloop()
 
-root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(root.winfo_id()))
-app = Vista(root)
-app.grid(column=0, row=0)
-app.columnconfigure(0, weight=1)
-app.rowconfigure(0, weight=1)
-
-
-root.mainloop()
+if __name__ == '__main__':
+    main()
