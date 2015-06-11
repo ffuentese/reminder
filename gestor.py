@@ -11,11 +11,13 @@ from ttk import *
 
 mydb_path = 'database/data.db'
 
-con = sqlite3.connect(mydb_path)
-cursor = con.cursor()
+
+
 
 if not os.path.exists(mydb_path):
-
+    os.makedirs('database')
+    con = sqlite3.connect(mydb_path)
+    cursor = con.cursor()
     cursor.execute('''create table passwords
     (id integer primary key, name text, value text)''')
 
@@ -34,6 +36,7 @@ class Passwd(object):
 
     def leer(self):
         try:
+            con = sqlite3.connect(mydb_path)
             cur = con.cursor()
             cur.execute("SELECT id, name, value FROM passwords")
 
@@ -50,6 +53,8 @@ class Passwd(object):
     def insertar(self, n, v):
 
         try:
+            con = sqlite3.connect(mydb_path)
+            cursor = con.cursor()
             cursor.execute('''INSERT INTO passwords (name, value) VALUES (?,?)''', (n.get(), v.get()))
             con.commit()
 
@@ -89,7 +94,7 @@ class Vista(Frame):
     def widgets_leer(self):
         self.title_nombre = Label(self, text="Ver contraseñas:")
         self.title_nombre.grid(row = 1, column = 1, sticky = W, pady=(10, 0))
-        self.result = Label(self, text="Esto es una prueba no más.")
+        self.result = Label(self, text="Right click to copy")
         self.result.grid(row = 2, column = 1, sticky = W, pady=(10,0))
         self.passwords = Passwd(self).leer()
         self.Lb1 = Listbox(self)
@@ -103,7 +108,9 @@ class Vista(Frame):
 
     def __copyToClipboard(self, event):
         self.clipboard_clear()
-        self.clipboard_append((self.Lb1.get(self.Lb1.curselection())))
+        self.lista = self.Lb1.get(self.Lb1.curselection())[2]
+        print self.lista
+        self.clipboard_append((self.lista))
 
     def new_window(self):
             self.newWindow = tk.Toplevel(self.master)
