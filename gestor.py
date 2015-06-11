@@ -22,9 +22,6 @@ if not os.path.exists(mydb_path):
     (id integer primary key, name text, value text)''')
 
 
-
-
-
 class Passwd(object):
 
     def __init__(self, name='',value=''):
