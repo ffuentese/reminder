@@ -7,8 +7,6 @@ import Tkinter as tk
 
 from ttk import *
 
-from tkintertable.Tables import TableCanvas
-from tkintertable.TableModels import TableModel
 
 
 mydb_path = 'database/data.db'
@@ -82,20 +80,35 @@ class Vista(Frame):
         self.pack()
         self.widgets_leer()
         self.passwd = Passwd(self)
-
-
+        try:
+            self.Lb1.bind('<Button-3>', self.__copyToClipboard)
+            print("Datos copiados")
+        except TclError:
+            print("Error con la copia del dato al portapapeles")
 
     def widgets_leer(self):
         self.title_nombre = Label(self, text="Ver contraseñas:")
         self.title_nombre.grid(row = 1, column = 1, sticky = W, pady=(10, 0))
         self.result = Label(self, text="Esto es una prueba no más.")
         self.result.grid(row = 2, column = 1, sticky = W, pady=(10,0))
+        self.passwords = Passwd(self).leer()
+        self.Lb1 = Listbox(self)
+        y = 0
+        for x in self.passwords:
+            if x[1]:
+                self.Lb1.insert(y, x)
+                y += 1
+        self.Lb1.grid(row = 3, column = 1,  sticky = W, pady=(10,0))
 
+
+    def __copyToClipboard(self, event):
+        self.clipboard_clear()
+        self.clipboard_append((self.Lb1.get(self.Lb1.curselection())))
 
     def new_window(self):
             self.newWindow = tk.Toplevel(self.master)
             self.newWindow.title("Administrador de contraseñas")
-            self.newWindow.geometry("250x150")
+            self.newWindow.geometry("250x400")
             self.center(self.newWindow)
             self.v_leer(self.newWindow)
 
