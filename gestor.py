@@ -61,6 +61,33 @@ class Passwd():
             if con:
                 con.close()
 
+    def deletepass(self, item):
+        """
+
+        :param n: string (descriptive name of a password)
+        :param v: string (the password itself)
+        :return: void
+        """
+        name = item[1]
+        value = item[2]
+
+        try:
+            con = sqlite3.connect(mydb_path)
+            cursor = con.cursor()
+            cursor.execute('''DELETE FROM passwords WHERE name = ? AND value = ?''', (name, value))
+            con.commit()
+
+        except Exception as e:
+            # Roll back any change if something goes wrong
+            con.rollback()
+            print "Error %s;" % e.args[0]
+
+            sys.exit(1)
+
+        finally:
+            if con:
+                con.close()
+
 
 class Vista(Frame):
     """
@@ -104,6 +131,8 @@ class Vista(Frame):
         self.title_nombre.grid(row=1, column=1, sticky=W, pady=(10, 0))
         self.result = Label(self, text="Right click to copy")
         self.result.grid(row=2, column=1, sticky=W, pady=(10, 0))
+        self.btnBorrar = Button(text="Borrar", command=lambda: self.passwd.deletepass(self.__selectPassword()))
+        self.btnBorrar.grid(row=3, column=1, sticky=W, pady=(10, 0))
         self.passwords = Passwd().leer()
         self.Lb1 = Listbox(self)
         y = 0
@@ -124,6 +153,17 @@ class Vista(Frame):
         print self.lista
         self.clipboard_append(self.lista)
 
+    def __selectPassword(self):
+        """
+        Deletes a password from the table
+        :param event:
+        :return: void.
+        """
+
+        self.item = self.Lb1.get(self.Lb1.curselection())
+        return self.item
+
+
     def new_window(self):
         """
         Draws the child window and sets its behavior.
@@ -135,8 +175,6 @@ class Vista(Frame):
         self.center(self.newWindow)
         self.v_leer(self.newWindow)
         self.newWindow.protocol("WM_DELETE_WINDOW", self.newWindow.withdraw)
-
-
 
     def create_widgets(self):
         """
