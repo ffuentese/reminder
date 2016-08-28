@@ -39,7 +39,7 @@ class Passwd():
 
     def insertar(self, n, v):
         """
-
+        Adds a new password to the database
         :param n: string (descriptive name of a password)
         :param v: string (the password itself)
         :return: void
@@ -63,7 +63,7 @@ class Passwd():
 
     def deletepass(self, item):
         """
-
+        Deletes a row from passwords
         :param item: List (list with name and password)
         :return: void
         """
@@ -77,7 +77,7 @@ class Passwd():
             con.commit()
 
         except Exception as e:
-            # Roll back any change if something goes wrong
+            # Rolls back any changes if something goes wrong
             con.rollback()
             print "Error %s;" % e.args[0]
 
@@ -117,20 +117,20 @@ class Vista(Frame):
         self.passwd = Passwd()
         try:
             self.Lb1.bind('<Button-3>', self.__copyToClipboard)
-            print("Datos copiados")
+            print("Data copied to the clipboard")
         except TclError:
-            print("Error con la copia del dato al portapapeles")
+            print("Error copying data to the clipboard")
 
     def widgets_leer(self):
         """
 
         :return: Displays widgets inside the child window "leer"
         """
-        self.title_nombre = Label(self, text="Ver contraseñas:")
+        self.title_nombre = Label(self, text="See passwords:")
         self.title_nombre.grid(row=1, column=1, sticky=W, pady=(10, 0))
         self.result = Label(self, text="Right click to copy")
         self.result.grid(row=2, column=1, sticky=W, pady=(10, 0))
-        self.btnBorrar = Button(self, text="Borrar", command=lambda: self.passwd.deletepass(self.__selectpassword()))
+        self.btnBorrar = Button(self, text="Delete", command=lambda: self.passwd.deletepass(self.__selectpassword()))
         self.btnBorrar.grid(row=10, column=1, sticky=W, pady=(10, 0))
         self.passwords = Passwd().leer()
         self.Lb1 = Listbox(self)
@@ -168,7 +168,7 @@ class Vista(Frame):
         :return:
         """
         self.newWindow = tk.Toplevel(self.master)
-        self.newWindow.title("Administrador de contraseñas")
+        self.newWindow.title("Password Manager")
         self.newWindow.geometry("250x400")
         self.center(self.newWindow)
         self.v_leer(self.newWindow)
@@ -179,7 +179,7 @@ class Vista(Frame):
         Creates the main window widgets.
         :return:
         """
-        self.title_nombre = Label(self, text="Nombre:")
+        self.title_nombre = Label(self, text="Name:")
         self.title_nombre.grid(row=1, column=1, sticky=W, pady=(10, 0))
         nom = StringVar()
         pas = StringVar()
@@ -189,9 +189,9 @@ class Vista(Frame):
         self.title_passwd.grid(row=2, column=1, sticky=W)
         self.passwd = Entry(self, textvariable=pas)
         self.passwd.grid(row=2, column=2, sticky=W)
-        self.boton = Button(text="Añadir", command=lambda: self.passwd.insertar(nom, pas))
+        self.boton = Button(text="Add", command=lambda: self.passwd.insertar(nom, pas))
         self.boton.grid(columnspan=1, row=3, sticky=W, pady=(10, 0), padx=(5, 0))
-        self.btnLeer = Button(text="Ver contraseñas", command=lambda: self.new_window())
+        self.btnLeer = Button(text="See passwords", command=lambda: self.new_window())
         self.btnLeer.grid(columnspan=1, row=4, sticky=W, pady=(10, 0), padx=(5, 0))
 
     def center(self, toplevel):
@@ -210,8 +210,12 @@ class Vista(Frame):
 
 
 def main():
+            """
+        Starts the application
+        :return:
+        """
     root = Tk()
-    root.title("Contraseña")
+    root.title("Password")
     root.geometry("250x150")
 
     root.eval('tk::PlaceWindow %s center' % root.winfo_pathname(root.winfo_id()))
